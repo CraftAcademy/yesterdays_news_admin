@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import Articles from "../modules/Articles";
 import utils from "../modules/utils";
+import {
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
+} from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 
 const CreateArticleForm = ({ onCreateMessage }) => {
   const [article, setArticle] = useState({});
@@ -9,6 +18,7 @@ const CreateArticleForm = ({ onCreateMessage }) => {
     event.preventDefault();
     const response = await Articles.create(article);
     onCreateMessage(response);
+    setTimeout(() => onCreateMessage(""), 4000);
   };
 
   const handleChange = (event) => {
@@ -26,57 +36,62 @@ const CreateArticleForm = ({ onCreateMessage }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label data-cy="title-label">
-            Title<br />
-            <input
-              name="title"
-              type="text"
-              data-cy="title-input"
-              onChange={handleChange}
-            />
-          </label>
-        </div>
-
-        <div>
-          <label data-cy="body-label">
-            Article body<br />
-            <textarea
-              name="body"
-              data-cy="body-input"
-              onChange={handleChange}
-            />
-          </label>
-        </div>
-
-        <div>
-          <select
-            data-cy="category-select"
-            name="category"
-            onChange={handleChange}
-          >
-            <option value="">--select category--</option>
-            <option value="news">News</option>
-            <option value="politics">Politics</option>
-            <option value="economy">Economy</option>
-            <option value="sports">Sports</option>
-          </select>
-        </div>
-        <div>
-          <input
-            accept="image/*"
-            type="file"
-            onChange={handleImage}
-            name="image"
-            alt="foo"
-            data-cy="image-input"
-          />
-        </div>
-        <button data-cy="submit-button">Submit</button>
-      </form>
-    </div>
+    <>
+      <TextField
+        fullWidth
+        data-cy="title-input"
+        label="Title"
+        name="title"
+        size="small"
+        onChange={handleChange}
+        variant="outlined"
+      />
+      <TextField
+        data-cy="body-input"
+        fullWidth
+        multiline
+        rows={7}
+        label="Article body"
+        name="body"
+        size="small"
+        onChange={handleChange}
+        variant="outlined"
+      />
+      <FormControl sx={{ width: "130px" }}>
+        <InputLabel id="category-label">Category</InputLabel>
+        <Select
+          labelId="category-label"
+          style={{ width: "200px" }}
+          data-cy="category-select"
+          onChange={handleChange}
+          name="category"
+          label="Category"
+        >
+          <MenuItem data-cy="news-category" value={"news"}>News</MenuItem>
+          <MenuItem data-cy="politics-category" value={"politics"}>Politics</MenuItem>
+          <MenuItem data-cy="economy-category" value={"economy"}>Economy</MenuItem>
+          <MenuItem data-cy="sports-category" value={"sports"}>Sports</MenuItem>
+        </Select>
+      </FormControl>
+      <div>
+        <input
+          accept="image/*"
+          type="file"
+          onChange={handleImage}
+          name="image"
+          alt="foo"
+          data-cy="image-input"
+        />
+      </div>
+      <Button
+        variant="contained"
+        onClick={handleSubmit}
+        data-cy="submit-button"
+        endIcon={<SendIcon />}
+      >
+        Submit
+      </Button>
+    </>
   );
 };
 
